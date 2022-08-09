@@ -1,0 +1,77 @@
+{% extends "template.html" %}
+{% block conteudo %}
+
+        <nav class="navbar navbar-light">
+            <a href="simulation" class="btn btn-outline-primary my-2 my-sm-0">List of simulations</a>
+            <div class="form-inline line">
+                <div class="dropdown">
+                  <a class="btn btn-outline-secondary my-2 my-sm-0 dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Home
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="simulation">Execution</a>
+                    <a class="dropdown-item" href="adm">Administrator</a>
+                  </div>
+                </div>
+
+                <!--<a href="/" class="btn btn-outline-secondary my-2 my-sm-0">Home</a> -->
+
+                <a href="{{ url_for('edit_profile', id=id_user) }}" type="button" class="btn btn-outline-warning edit_margin"> Edit profile </a>
+
+                <a href="logout" class="btn btn-outline-danger my-2 my-sm-0"> Exit </a>
+            </div>
+        </nav>
+        <br>
+        <table class="table table-striped table-responsive table-bordered">
+            <thead class="thead-default">
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <!--<th>Password</th>-->
+                    <th>Institution</th>
+                    <th>Nivel</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for con in contas %}
+                <tr>
+                    <td>{{ con.nome }}</td>
+                    <td>{{ con.email }}</td>
+
+                    <!--<td class="hidetext"> {{ con.senha }}</td>-->
+
+                    <td>{{ con.instituicao }}</td>
+
+                    {% if con.nivel == 0 %} <td> <span class="badge bg-primary"> Execution </span> </td> {% endif %}
+                    {% if con.nivel == 1 %} <td> <span class="badge bg-secondary"> ADM </span> </td> {% endif %}
+
+                    {% if con.status == 0 %} <td> <span class="badge bg-warning text-dark"> Pendente </span> </td> {% endif %}
+                    {% if con.status == 1 %} <td> <span class="badge bg-success text-dark"> Aprovado </span> </td> {% endif %}
+                    {% if con.status == 2 %} <td> <span class="badge bg-danger text-dark"> Recusado </span> </td> {% endif %}
+
+                    <td>
+
+                        <a href="{{ url_for('edit_account', id=con.id) }}" type="button" class="btn btn-outline-warning"> Edit </a>
+
+                        <a class="btn btn-outline-danger" type="button" onclick="myFunction({{con.id}})"> Delete </a>
+
+                        <script>
+                            function myFunction(id) {
+                              let text;
+                              if (confirm("Deseja realmente deletar?") == true) {
+                                window.location.href = "./delete_account/" + id
+                                text = "You pressed OK!";
+                              } else {
+                                text = "You canceled!";
+                              }
+                            }
+                        </script>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+{% endblock %}

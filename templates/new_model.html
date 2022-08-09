@@ -1,0 +1,65 @@
+<!--organismo, fba_result, arquivo_sbml, forma_analise, descricao, data_exec, id_user -->
+{% extends "template.html" %}
+{% block conteudo %}
+      <form action="{{ url_for('create_simulation') }}" method="post" enctype="multipart/form-data">
+        <fieldset>
+          <div class="form-group">
+            <label for="organism"><strong>Organism</strong></label>
+            <select class="form-select" id="organism" name="organism" aria-label="Default select example">
+              <option selected>Open this select menu</option>
+
+              <option value="Escherichia coli"> Escherichia coli</option>
+              <option value="Haemophilus influenzae"> Haemophilus influenzae </option>
+              <option value="Klebsiella pneumoniae"> Klebsiella pneumoniae </option>
+              <option value="Mycoplasma genitalium"> Mycoplasma genitalium </option>
+              <option value="Pseudomonas aeruginosa"> Pseudomonas aeruginosa </option>
+              <option value="Salmonella typhimurium"> Salmonella typhimurium </option>
+              <option value="Mycobacterium tuberculosis"> Mycobacterium tuberculosis </option>
+              <option value="Pseudomonas putida"> Pseudomonas putida </option>
+              <option value="Staphylococcus aureus"> Staphylococcus aureus </option>
+              <option value="Acinetobacter baumannii"> Acinetobacter baumannii </option>
+              <option value="Streptococcus mutans"> Streptococcus mutans </option>
+              <option value="Serratia"> Serratia </option>
+            </select>
+          </div>
+          <div class="form-group">
+
+            <label for="fileSBML"><strong>FileSBML</strong></label>
+            <input type="file" id="fileSBML" name="fileSBML" class="form-control" accept=".xml, .sbml">
+
+
+          </div>
+          <div class="form-group">
+            <label for="form_analysis"><strong>Form of Analisys</strong></label>
+            <select class="form-select" id="form_analysis" name="form_analysis" aria-label="Default select example">
+              <option selected>Open this select menu</option>
+              <option value="FBA"> only FBA </option>
+              <option value="FBA + FVA"> FBA + FVA </option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="description"><strong>Description</strong></label>
+            <textarea type="text" class="form-control" id="description" name="description" rows="3"></textarea>
+          </div>
+          <br>
+          <button type="submit" class="btn btn-primary btn-salvar">Salvar</button>
+          <input type="button" class="btn btn-warning" value="Voltar" onClick="history.go(-1)">
+          <script>
+            $(document).ready(function(){
+              $(window).scroll(function(){
+                  if ($(this).scrollTop() > 100) {
+                      $('a[href="#top"]').fadeIn();
+                  } else {
+                      $('a[href="#top"]').fadeOut();
+                  }
+              });
+
+              $('a[href="#top"]').click(function(){
+                  $('html, body').animate({scrollTop : 0},800);
+                  return false;
+              });
+            });
+          </script>
+        </fieldset>
+      </form>
+{% endblock %}

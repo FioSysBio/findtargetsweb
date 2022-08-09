@@ -1,0 +1,134 @@
+{% extends "template.html" %}
+{% block conteudo %}
+
+      <form action="{{ url_for('update_profile') }}" method="post">
+        <fieldset>
+          <input type="hidden" name="id" value="{{ conta.id }}">
+          <div class="form-group margin_form">
+            <label for="name"><strong>Name</strong></label>
+            <input type="text" id="name" name="name" class="form-control" value="{{ conta.nome }}">
+          </div>
+          <div class="form-group margin_form">
+            <label for="email"><strong>Email</strong></label>
+            <input type="email" id="email" name="email" class="form-control" value="{{ conta.email }}">
+          </div>
+
+          <div class="form-group margin_form">
+            <label for="password">
+              <strong>Password &nbsp;&nbsp;</strong>
+              <input type="checkbox" onclick="showPass1()"> Show Password
+            </label>
+            <div class="padrao_pass">The password must contain at least one uppercase letter, one lowercase letter, a number, a symbol and be between 8 and 12 characters long.</div>
+            <input type="password" id="password" name="password" class="form-control" value="{{ conta.senha }}"
+                   title="A senha deve conter pelo menos uma letra maiuscula, uma minuscula, um símbolo, um número, e conter entre 8 a 12 caracteres"
+                   pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,12}$">
+          </div>
+
+          <script>
+            function showPass1() {
+              let x = document.getElementById("password");
+              if (x.type === "password") {
+                x.type = "text";
+              } else {
+                x.type = "password";
+              }
+            }
+            </script>
+
+          <div class="form-group margin_form">
+            <label for="password2">
+              <strong>Repeat the password&nbsp;&nbsp;</strong>
+              <input type="checkbox" onclick="showPass2()"> Show Password
+            </label>
+            <input type="password" id="password2" name="password2" class="form-control" value="{{ conta.senha }}" onchange="verifica_senha()">
+          </div>
+
+          <script>
+            function showPass2() {
+              let x = document.getElementById("password2");
+              if (x.type === "password") {
+                x.type = "text";
+              } else {
+                x.type = "password";
+              }
+            }
+            </script>
+
+          <div class="form-group margin_form">
+            <label for="instituicao"><strong>Affiliated institution</strong></label>
+            <input type="text" id="instituicao" name="instituicao" class="form-control" value="{{ conta.instituicao }}">
+          </div>
+
+          <div class="form-group margin_form">
+            <label hidden for="nivel"><strong>Nivel</strong></label>
+            <select hidden class="form-select" id="nivel" name="nivel" aria-label="Default select example">
+              {% if conta.nivel == 0 %}
+                <option selected value="0">Execution</option>
+              {% else %}
+                <option value="0">Execution</option>
+              {% endif %}
+              {% if conta.nivel == 1 %}
+                <option selected value="1">ADM</option>
+              {% else %}
+                <option value="1">ADM</option>
+              {% endif %}
+
+            </select>
+          </div>
+          <div class="form-group margin_form">
+            <label hidden for="status"><strong>Status</strong></label>
+            <select hidden class="form-select" id="status" name="status" aria-label="Default select example" >
+              {% if conta.status == 0 %}
+                <option selected value="0">Pendente</option>
+              {% else %}
+                <option value="0">Pendente</option>
+              {% endif %}
+              {% if conta.status == 1 %}
+                <option selected value="1">Aprovado</option>
+              {% else %}
+                <option value="1">Aprovado</option>
+              {% endif %}
+              {% if conta.status == 2 %}
+                <option selected value="2">Recusado</option>
+              {% else %}
+                <option value="2">Recusado</option>
+              {% endif %}
+            </select>
+          </div>
+
+          <br>
+          <button type="submit" id="salvar_conta" class="btn btn-primary btn-salvar">Submit</button>
+          <input type="button" class="btn btn-warning" value="Back" onClick="history.go(-1)">
+          <script>
+            $(document).ready(function(){
+              $(window).scroll(function(){
+                  if ($(this).scrollTop() > 100) {
+                      $('a[href="#top"]').fadeIn();
+                  } else {
+                      $('a[href="#top"]').fadeOut();
+                  }
+              });
+
+              $('a[href="#top"]').click(function(){
+                  $('html, body').animate({scrollTop : 0},800);
+                  return false;
+              });
+            });
+          </script>
+        </fieldset>
+      </form>
+      <script>
+      function verifica_senha(){
+        let senha1 = document.getElementById("password").value;
+        let senha2 = document.getElementById("password2").value;
+        let ok=false;
+
+        if(senha1 == senha2){
+          ok=true;
+          document.getElementById("salvar_conta").disabled = false;
+        }else{
+          alert("Senhas não coincidem")
+        }
+      }
+    </script>
+{% endblock %}

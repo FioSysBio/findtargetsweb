@@ -1,0 +1,50 @@
+{% extends "template.html" %}
+{% block conteudo %}
+        <form method="POST" action="{{ url_for('autenticar') }}">
+            <input type="hidden" name="proxima" value="{{ proxima }}">
+            <p>
+                <label>Email:</label>
+                <input class="form-control" type="email" name="email" required>
+            </p>
+            <p>
+                <label>Password:</label>
+                <input class="form-control" type="password" name="senha" id="senha" required>
+                <input type="checkbox" onclick="showPass()"> Show Password
+            </p>
+            <script>
+            function showPass() {
+              let x = document.getElementById("senha");
+              if (x.type === "password") {
+                x.type = "text";
+              } else {
+                x.type = "password";
+              }
+            }
+            </script>
+
+
+            <div class="col text-center">
+                <p><button class="btn btn-primary" type="submit">Submit</button>
+                <input type="button" class="btn btn-warning" value="Back" onClick="history.go(-1)"></p>
+                <script>
+                    $(document).ready(function(){
+                      $(window).scroll(function(){
+                          if ($(this).scrollTop() > 100) {
+                              $('a[href="#top"]').fadeIn();
+                          } else {
+                              $('a[href="#top"]').fadeOut();
+                          }
+                      });
+
+                      $('a[href="#top"]').click(function(){
+                          $('html, body').animate({scrollTop : 0},800);
+                          return false;
+                      });
+                    });
+                </script>
+                <br>
+                <p>Don't have a account yet? <br>
+                Request yours <a href="request_account">here</a></p>
+            </div>
+        </form>
+{% endblock %}

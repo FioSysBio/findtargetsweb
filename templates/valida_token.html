@@ -1,0 +1,33 @@
+{% extends "template.html" %}
+{% block conteudo %}
+
+        <div class="alert alert-warning" role="alert">
+            <h4>An email with an account request validation <strong>token</strong> has been sent to your email,
+                please access your inbox, enter it below to confirm your email and wait for a
+                response from the account registration approval.</h4>
+        </div>
+        <style>
+            .center-block {
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+            }
+        </style>
+        <div class="center-block">
+            <form class="row text-center" method="POST" action="{{ url_for('validarToken') }}" enctype="multipart/form-data">
+              <div class="col-auto">
+                <label for="token" class="visually-hidden">Token</label>
+                <input type="text" class="form-control" name="token" id="token" placeholder="Token">
+              </div>
+
+              <div class="col-auto">
+                <button type="submit" class="btn btn-primary">Confirm token</button>
+              </div>
+            </form>
+        </div>
+        <br>
+        <div class="text-center alert alert-secondary" role="alert">
+           For more information or questions, contact the email<br><i>suportefindtargets@outlook.com</i>
+        </div>
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends "template.html" %}
+{% block conteudo %}
+
+        <nav class="navbar navbar-light">
+            <a href="new_model" class="btn btn-outline-primary my-2 my-sm-0">New simulation</a>
+            <div class="form-inline">
+                <a href="/" class="btn btn-outline-secondary my-2 my-sm-0">Home</a>
+
+                <a href="{{ url_for('edit_profile', id=id_user) }}" type="button" class="btn btn-outline-warning"> Edit profile </a>
+
+                <a href="logout" class="btn btn-outline-danger my-2 my-sm-0">Exit</a>
+            </div>
+
+        </nav>
+        <br>
+        <div class="table-responsive">
+           <table class="table table-striped table-responsive table-bordered">
+                <thead class="thead-default">
+                    <tr>
+                        <th>Organism</th>
+                        <th>FBA Result</th>
+                        <!-- <th>File SBML</th> -->
+                        <th>Form of Analysis</th>
+                        <th>Description</th>
+                        <th>Datetime</th>
+                        <th>Results</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for org in organismos %}
+
+                    <tr>
+                        <!--organismo, fba_result, arquivo_sbml, forma_analise, descricao, data_exec, email_user -->
+                        <td>{{ org.organismo }}</td>
+                        <td>{{ org.fba_result }}</td>
+
+                        <!-- <td>{{ org.arquivo_sbml }}</td> -->
+
+                        <td>{{ org.forma_analise }}</td>
+                        <td>{{ org.descricao }}</td>
+                        <td>{{ org.data_exec }}</td>
+                        <td><a href="#">View</a></td>
+                        <td>
+                        <a class="btn btn-outline-danger" type="button" onclick="delete_simulation({{org.id}})"> Delete </a>
+                        <script>
+                            function delete_simulation(id) {
+                              let text;
+                              if (confirm("Deseja realmente deletar?") == true) {
+                                window.location.href = "./delete_simulation/" + id
+                                text = "You pressed OK!";
+                              } else {
+                                text = "You canceled!";
+                              }
+                            }
+                        </script>
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+
+{% endblock %}

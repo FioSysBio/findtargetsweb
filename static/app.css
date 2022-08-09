@@ -1,0 +1,21 @@
+.hidetext {
+    -webkit-text-security: disc;
+}
+
+.padrao_pass{
+    color: #656565;
+    font-size: 14px;
+}
+
+.line{
+    display: flex;
+}
+
+.edit_margin{
+    margin-right: 5px;
+    margin-left: 5px;
+}
+
+.margin_form{
+    margin-bottom: 1%;
+}
