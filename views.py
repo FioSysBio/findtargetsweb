@@ -223,7 +223,8 @@ def create_simulation():
 
     print("-----init calc fba------")
 
-    model = load_model("e_coli_core")
+    #load_model(model_id: str, repositories: Iterable[AbstractModelRepository] = DEFAULT_REPOSITORIES, cache: bool = True) → ‘Model’
+    model = load_model("")
     solution = model.optimize()
     print(solution)
 
