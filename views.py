@@ -234,7 +234,7 @@ def create_simulation():
 
     print("data_dir -> ", data_dir)
 
-    mini_fbc2_path = data_dir / "e_coli_core.xml"
+    mini_fbc2_path = data_dir / "MODEL1507180020_url.xml"
 
     model = read_sbml_model(str(mini_fbc2_path.resolve()))
 
