@@ -11,17 +11,8 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
-import cobra
-from cobra.io import load_model
-from cobra import Model, Reaction, Metabolite
-from cobra.flux_analysis import (single_gene_deletion, single_reaction_deletion)
-from cobra.flux_analysis import gapfill
-from cobra.io.sbml import validate_sbml_model, read_sbml_model
-import os
-from os.path import join
-
 from pathlib import Path
-from cobra.io import save_json_model, load_matlab_model, save_matlab_model, read_sbml_model, write_sbml_model
+from cobra.io import save_json_model, load_matlab_model, save_matlab_model, read_sbml_model, write_sbml_model, validate_sbml_model
 import logging
 
 model_dao = ModeloDao(db)
@@ -226,7 +217,6 @@ def create_simulation():
     form_analysis = request.form['form_analysis']
     description = request.form['description']
 
-
     print("-----init calc fba------")
 
     data_dir = Path(".") / "uploads"
@@ -234,12 +224,14 @@ def create_simulation():
 
     print("data_dir -> ", data_dir)
 
-    mini_fbc2_path = data_dir / "MODEL1507180020_url.xml"
+    mini_fbc2_path = data_dir / "arquivo_sbml3_ccbh4851_argollo.xml"
 
     model = read_sbml_model(str(mini_fbc2_path.resolve()))
+    report = validate_sbml_model(str(mini_fbc2_path.resolve()))
 
     solution = model.optimize()
     print(round(solution, 6))
+    print(report)
 
     print("-----end calc fba------")
 
