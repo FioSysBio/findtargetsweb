@@ -16,7 +16,7 @@ from cobra.io import load_model
 from cobra import Model, Reaction, Metabolite
 from cobra.flux_analysis import (single_gene_deletion, single_reaction_deletion)
 from cobra.flux_analysis import gapfill
-from cobra.io.sbml import validate_sbml_model
+from cobra.io.sbml import validate_sbml_model, read_sbml_model
 import os
 from os.path import join
 
@@ -213,6 +213,8 @@ def new_model():
     return render_template('new_model.html', titulo='New Simulation', category='info')
 
 
+def readModel(self, sbmlfile):
+    return cobra.io.read_sbml_model(sbmlfile)
 
 @app.route('/create_simulation', methods = ['POST',])
 def create_simulation():
@@ -222,12 +224,9 @@ def create_simulation():
     description = request.form['description']
 
     print("-----init calc fba------")
-
-    #load_model(model_id: str, repositories: Iterable[AbstractModelRepository] = DEFAULT_REPOSITORIES, cache: bool = True) → ‘Model’
-    model = load_model("")
+    model = readModel(arquivo)
     solution = model.optimize()
     print(solution)
-
     print("-----end calc fba------")
 
     simulation = Modelos_Execucao(organism, '1.036524', arquivo.filename, form_analysis, description, '', session['usuario_logado'])
