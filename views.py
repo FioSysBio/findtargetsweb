@@ -20,6 +20,9 @@ from cobra.io.sbml import validate_sbml_model, read_sbml_model
 import os
 from os.path import join
 
+from pathlib import Path
+from cobra.io import save_json_model, load_matlab_model, save_matlab_model, read_sbml_model, write_sbml_model
+import logging
 
 model_dao = ModeloDao(db)
 usuario_dao = UsuarioDao(db)
@@ -223,11 +226,23 @@ def create_simulation():
     form_analysis = request.form['form_analysis']
     description = request.form['description']
 
+
     print("-----init calc fba------")
-    model = readModel(arquivo)
+
+    data_dir = Path(".") / "uploads"
+    data_dir = data_dir.resolve()
+
+    print("data_dir -> ", data_dir)
+
+    mini_fbc2_path = data_dir / "e_coli_core.xml"
+
+    model = read_sbml_model(str(mini_fbc2_path.resolve()))
+
     solution = model.optimize()
-    print(solution)
+    print(round(solution, 6))
+
     print("-----end calc fba------")
+
 
     simulation = Modelos_Execucao(organism, '1.036524', arquivo.filename, form_analysis, description, '', session['usuario_logado'])
     simulation = model_dao.salvar(simulation)
