@@ -2,7 +2,6 @@ from pathlib import Path
 from cobra.io import save_json_model, load_matlab_model, save_matlab_model, read_sbml_model, write_sbml_model, validate_sbml_model
 import logging
 
-
 print("-----init calc fba------")
 
 data_dir = Path(".") / "uploads"

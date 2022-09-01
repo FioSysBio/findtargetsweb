@@ -18,12 +18,11 @@ SQL_USUARIO_POR_EMAIL = 'SELECT id, nome, email, senha, status, nivel, instituic
 SQL_ATUALIZA_MODELO = 'UPDATE Modelos_Executados SET organismo=%s, fba_result=%s, arquivo_sbml=%s, forma_analise=%s,' \
                       'descricao=%s where id = %s'
 
-SQL_ATUALIZA_USUARIO = 'UPDATE Usuarios SET nome=%s, email=%s, senha=%s, status=%s,' \
-                       'nivel=%s, instituicao=%s, token=%s, validado=%s where id = %s'
-
-SQL_ATUALIZA_PROFILE = 'UPDATE Usuarios SET nome=%s, email=%s, senha=%s, instituicao=%s where id = %s'
+SQL_ATUALIZA_USUARIO = 'UPDATE Usuarios SET nome=%s, email=%s, senha=%s, status=%s, nivel=%s, instituicao=%s, token=%s, validado=%s where id = %s'
 
 SQL_ALTERA_TOKEN = 'UPDATE Usuarios SET token=0, validado=1 where token = %s'
+
+SQL_ATUALIZA_FBA = 'UPDATE Modelos_Executados SET fba_result=%s where id = %s'
 
 SQL_BUSCA_MODELOS = 'SELECT id, organismo, fba_result, arquivo_sbml, forma_analise, descricao, data_execucao, email_user ' \
                     'from Modelos_Executados'
@@ -62,6 +61,11 @@ class ModeloDao:
             Modelo.id = cursor.lastrowid
         self.__db.connection.commit()
         return Modelo
+
+    def atualiza_FBA(self, result_fba, id):
+        cursor = self.__db.connection.cursor()
+        cursor.execute(SQL_ATUALIZA_FBA, (result_fba, id))
+        self.__db.connection.commit()
 
     def listar(self):
         cursor = self.__db.connection.cursor()
