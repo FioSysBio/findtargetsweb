@@ -217,30 +217,6 @@ def create_simulation():
     form_analysis = request.form['form_analysis']
     description = request.form['description']
 
-    print("-----init calc fba------")
-
-    #data_dir = Path(".") / "uploads"
-    #data_dir = data_dir.resolve()
-
-    #print("data_dir -> ", data_dir)
-
-    #mini_fbc2_path = data_dir / "arquivo_sbml3_ccbh4851_argollo.xml"
-    #mini_fbc2_path = data_dir / "e_coli_core.xml"
-    #mini_fbc2_path = data_dir / "MODEL1507180020_url.xml"
-
-    #model = read_sbml_model(str(mini_fbc2_path.resolve()))
-    #print("teste com arquivo na raiz")
-
-    #model = cobra.io.read_sbml_model('uploads/e_coli_core.xml')
-    #report = validate_sbml_model('uploads/e_coli_core.xml')
-    #solution = model.optimize()
-
-    #print("FBA e_coli_core == ", solution.objective_value)
-    #print(report)
-
-    print("-----end calc fba------")
-
-
     simulation = Modelos_Execucao(organism,  '0', arquivo.filename, form_analysis, description, '', session['usuario_logado'])
     simulation = model_dao.salvar(simulation)
 
@@ -250,7 +226,7 @@ def create_simulation():
     model = cobra.io.read_sbml_model(f'uploads/simulation_{simulation.id}.xml')
     solution = model.optimize()
 
-    model_dao.atualiza_FBA(solution.objective_value, simulation.id)
+    model_dao.atualiza_FBA(round(solution.objective_value, 4), simulation.id)
 
     return redirect(url_for('simulation'))
 
