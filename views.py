@@ -5,6 +5,7 @@ from dao import ModeloDao, UsuarioDao
 from findtarget import db, app
 import random
 import string
+import pandas as pd
 from datetime import timedelta
 
 import smtplib
@@ -223,10 +224,27 @@ def create_simulation():
     upload_path = app.config['UPLOAD_PATH']
     arquivo.save(f'{upload_path}/simulation_{simulation.id}.xml')
 
+    # Item 1 - Geração de FBA
     model = cobra.io.read_sbml_model(f'uploads/simulation_{simulation.id}.xml')
     solution = model.optimize()
+    model_dao.atualiza_FBA(round(solution.objective_value, 6), simulation.id)
 
-    model_dao.atualiza_FBA(round(solution.objective_value, 4), simulation.id)
+    # Item 2 - Priorização das reações existentes
+    fva_result = cobra.flux_analysis.flux_variability_analysis(model, model.reactions[:len(model.reactions)])
+    print("FVA_Result -> ", fva_result)
+
+    pd.DataFrame.from_dict(fva_result).round(6).to_csv(f'results/01-FVA_Simulation_{simulation.id}.csv')
+
+    #criar um df para reacoesFVADifZero
+    listaReacoesFVADifZero = []
+    reacoesFVADifZero = pd.DataFrame(listaReacoesFVADifZero, columns=['Reactions'])
+
+    df_fva_result = pd.DataFrame(fva_result)
+    df_fva_result = df_fva_result.sort_index()
+    itemsFVAResult = df_fva_result.iterrows()
+    itemsFBAResult = sorted(solution.x_dict.iteritems())
+
+    #INICIO DA VERIFICACAO ENTRE FBA/FVA - fazer o for
 
     return redirect(url_for('simulation'))
 
