@@ -244,7 +244,7 @@ def create_simulation():
     itemsFVAResult = df_fva_result.iterrows()
     itemsFBAResult = sorted(solution.x_dict.iteritems())
 
-    #INICIO DA VERIFICACAO ENTRE FBA/FVA - fazer o for
+    #INICIO DA VERIFICACAO ENTRE FBA/FVA - fazer o for de verificação
 
     return redirect(url_for('simulation'))
 
