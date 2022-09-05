@@ -224,27 +224,69 @@ def create_simulation():
     upload_path = app.config['UPLOAD_PATH']
     arquivo.save(f'{upload_path}/simulation_{simulation.id}.xml')
 
+    numCasasDec = 6
+
     # Item 1 - Geração de FBA
     model = cobra.io.read_sbml_model(f'uploads/simulation_{simulation.id}.xml')
     solution = model.optimize()
-    model_dao.atualiza_FBA(round(solution.objective_value, 6), simulation.id)
+    model_dao.atualiza_FBA(round(solution.objective_value, numCasasDec), simulation.id)
 
     # Item 2 - Priorização das reações existentes
     fva_result = cobra.flux_analysis.flux_variability_analysis(model, model.reactions[:len(model.reactions)])
     print("FVA_Result -> ", fva_result)
 
-    pd.DataFrame.from_dict(fva_result).round(6).to_csv(f'results/01-FVA_Simulation_{simulation.id}.csv')
+    pd.DataFrame.from_dict(fva_result).round(numCasasDec).to_csv(f'results/01-FVA_Simulation_{simulation.id}.csv')
 
-    #criar um df para reacoesFVADifZero
-    listaReacoesFVADifZero = []
-    reacoesFVADifZero = pd.DataFrame(listaReacoesFVADifZero, columns=['Reactions'])
+    #criar um df para reacoesFVADifZero, no for pega as reações e grava dentro do df
+    listReactPerturb = []
+    reacoesFVADifZero = pd.DataFrame(listReactPerturb, columns=['Reactions'])
 
     df_fva_result = pd.DataFrame(fva_result)
     df_fva_result = df_fva_result.sort_index()
     itemsFVAResult = df_fva_result.iterrows()
+    #erro aqui, solucionar ordenação de solution
     itemsFBAResult = sorted(solution.x_dict.iteritems())
 
     #INICIO DA VERIFICACAO ENTRE FBA/FVA - fazer o for de verificação
+    for (keyFVA, valueFVA), (keyFBA, valueFBA) in list(zip(itemsFVAResult, itemsFBAResult)):
+        minFVA = round(float(valueFVA["minimum"]), numCasasDec)
+        maxFVA = round(float(valueFVA["maximum"]), numCasasDec)
+        valueFBA = round(float(valueFBA), numCasasDec)
+        # Filtrando reacoes que estao ativas no momento
+        if maxFVA != 0:
+            # method --> ("1", "FBA+FVA"), ("2", "Only FBA")
+            if form_analysis == "1":
+                diferencaReacao = maxFVA - minFVA
+                if diferencaReacao == 0:
+                    #escrever na lista e no df
+                    #reacoesFVADifZero.append(str(keyFBA))
+                    #reacoesFVADifZero.write(str(keyFBA) + '\n')
+                    listReactPerturb.append(keyFBA)
+            else:
+                #escreve na lista e no df
+
+                #reacoesFVADifZero.write(str(keyFBA) + '\n')
+                #reacoesFVADifZero.append(str(keyFBA))
+                listReactPerturb.append(keyFBA)
+
+            # diferencaReacao = maxFVA - minFVA
+            # reacoesFVADifZero.write("Resultado da diferenca entre max e min = " + str(diferencaReacao))
+            # reacoesFVADifZero.write('\n\n')
+        if keyFBA != keyFVA:
+            raise Exception("Por favor, verifique, chave FBA/FVA nao batem na comparacao")
+
+        else:
+            if valueFBA < minFVA:
+                raise Exception("Por favor, verifique o modelo. Valor do FBA dessa reacao ser menor que o minimo descrito no FVA")
+
+            if valueFBA > maxFVA:
+                raise Exception("Por favor, verifique o modelo. Valor do FBA dessa reacao ser maior que o maximo descrito no FVA")
+
+        pd.DataFrame.from_dict(reacoesFVADifZero).round(numCasasDec).to_csv(f'results/02-ReacoesFVADifZero_Simulation_{simulation.id}.csv')
+        #reacoesFVADifZero.close()
+        #fileLog.write("Lista de reacoes a analisar = " + str(len(listReactPerturb)) + '\n')
+        #fileLog.write("GENERATED FILE 01-fva.csv\n")
+        #fileLog.write("GENERATED FILE %s\n" % reacoesFVADifZero.name)
 
     return redirect(url_for('simulation'))
 
