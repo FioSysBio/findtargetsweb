@@ -245,6 +245,11 @@ def create_simulation():
     df_fva_result = df_fva_result.sort_index()
     itemsFVAResult = df_fva_result.iterrows()
     #erro aqui, solucionar ordenação de solution
+
+    # criar um dicionário na unha e tenha o id valor de fba_fluxes[id]
+    # for f in sbml_model.reactions:
+    #    print("%s :: (flux=%.8f)" % (f.id, fba_fluxes[f.id]))
+
     itemsFBAResult = sorted(solution.x_dict.iteritems())
 
     #INICIO DA VERIFICACAO ENTRE FBA/FVA - fazer o for de verificação
